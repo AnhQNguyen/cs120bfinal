@@ -16,24 +16,54 @@
 
 	
 //state machines
-enum displayStates{output};
+enum displayStates{o1, o2, o3, o4, o5, o6, o7, o8};
 enum playerStates{p1, p2, p3};
 enum aiStates {a1, a2, a3, a4};
-enum ballStates {move};
+enum ballStates {begin, m1, m2, m3 ,m4, m5, m6, m7};
+
 //display arrays
-unsigned char rows[8] = {0x11, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x11};
-unsigned char columns[8] = {0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01};
+unsigned char rows[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+unsigned char columns[8] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
 
 //count
-int i = 0;
 int score = 0;
+
+//flags
+unsigned char flag = 0x00;
 
 //buttons
 unsigned char b1 = 0x00;
 unsigned char b2 = 0x00;
+unsigned char set = 0x00;
 
 int ballTick(int state) {
+        set = ~PINA & 0x04;
 
+	switch(state) {
+		case begin:
+			if(set) {
+				state = m1;
+			}
+			break;
+		case m1:
+			break;
+
+		default:
+			break;
+	}
+
+	switch(state) {
+		case begin:
+			break;
+		case m1:
+		        rows[6] = 0x1B;	
+			break;
+		
+		default:
+			break;
+	
+	
+	}
 
 
 	return state;
@@ -124,7 +154,29 @@ int playerTick(int state) {
 }
 int displayTick(int state) {
 	switch(state) {
-		case output:
+		case o1:
+			state = o2;
+			break;
+		case o2:
+			state = o3;
+			break;
+		case o3:
+			state = o4;
+			break;
+		case o4:
+			state = o5;
+			break;
+		case o5:
+			state = o6;
+			break;
+		case o6:
+			state = o7;
+			break;
+		case o7:
+			state = o8;
+			break;
+		case o8:
+			state = o1;
 			break;
 		default:
 			break;
@@ -132,14 +184,48 @@ int displayTick(int state) {
 	}
 
 	switch(state) {
-		case output:
-			for(int i = 0; i < 8; i++) {
-				PORTD = rows[i];
-				PORTC = columns[i];
-			}
-			break;	
-		default:
-			break;
+		case o1:
+			PORTD = rows[0];
+			PORTC = columns[0];
+                        break;
+                case o2:
+			PORTD = rows[1];
+                        PORTC = columns[1];
+
+                        break;
+                case o3:
+			PORTD = rows[2];
+                        PORTC = columns[2];
+
+                        break;
+                case o4:
+			PORTD = rows[3];
+                        PORTC = columns[3];
+
+                        break;
+                case o5:
+			PORTD = rows[4];
+                        PORTC = columns[4];
+
+                        break;
+                case o6:
+			PORTD = rows[5];
+                        PORTC = columns[5];
+
+                        break;
+                case o7:
+			PORTD = rows[6];
+                        PORTC = columns[6];
+
+                        break;
+                case o8:
+			PORTD = rows[7];
+                        PORTC = columns[7];
+
+                        break;
+                default:
+                        break;
+
 		
 	}
 	
@@ -172,7 +258,7 @@ int main(void) {
 	task2.TickFct = &aiTick;
 
 	task3.state = start;
-	task3.period = 100;
+	task3.period = 500;
 	task3.elapsedTime = task3.period;
 	task3.TickFct = &ballTick;
 
