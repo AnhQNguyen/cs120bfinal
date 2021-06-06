@@ -25,11 +25,13 @@ enum ballStates {begin, m1, m2, m3 ,m4, m5, m6, m7};
 unsigned char rows[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 unsigned char columns[8] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
 
+unsigned char flag = 0x00;
+unsigned char diaL = 0x00;
+unsigned char diaR = 0x00;
+
 //count
 int score = 0;
 
-//flags
-unsigned char flag = 0x00;
 
 //buttons
 unsigned char b1 = 0x00;
@@ -46,19 +48,124 @@ int ballTick(int state) {
 			}
 			break;
 		case m1:
+			if(set) { state = begin;}
+			
+			state = m2;
 			break;
+		case m2:
+			if(set) {state = begin;}
+			if(flag) {state = m1;}
+			
+			else if(!flag) {state = m3;}
+			break;
+		case m3:
+			if(set) {state = begin;}
+                        if(flag) {state = m2;}
 
+			else if(!flag) {state = m4;}
+
+			break;
+		case m4:
+			if(set) {state = begin;}
+                        if(flag) {state = m3;}
+
+			else if(!flag) {state = m5;}
+
+			break;
+		case m5:
+			if(set) {state = begin;}
+                        if(flag) {state = m4;}
+
+			else if(!flag) {state = m6;}
+
+			break;
+		case m6:
+			if(set) {state = begin;}
+			state = m5;
+			break;
 		default:
 			break;
 	}
 
 	switch(state) {
 		case begin:
+			PORTB = 0x01;
 			break;
 		case m1:
-		        rows[6] = 0x1B;	
+			PORTB = 0x00;
+			
+			if(flag) {
+
+				rows[5] = 0xFF;
+				rows[6] = 0x1B;
+
+			}
+			else {
+					rows[6] = 0x1B;
+			}
+
+			flag = 0x00;
 			break;
-		
+
+		case m2:
+			if(flag) {
+
+				rows[4] = 0xFF;
+				rows[5] = 0x1B;
+
+			}
+			else {
+				rows[6] = 0xFF;
+                                rows[5] = 0x1B;
+                        }
+
+			break;
+		case m3:
+			if(flag) {
+
+				rows[3] = 0xFF;
+				rows[4] = 0x1B;
+
+			}
+			else {
+				rows[5] = 0xFF;
+                                rows[4] = 0x1B;
+                        }
+			break;
+		case m4:
+			if(flag) {
+
+				rows[2] = 0xFF;
+				rows[3] = 0x1B;
+			}
+			else {
+				rows[4] = 0xFF;
+                                rows[3] = 0x1B;
+                        }
+			break;
+		case m5:
+			if(flag) {
+					rows[2] = 0x1B;
+					rows[1] = 0xFF;
+			}
+			else {
+				rows[3] = 0xFF;
+                                rows[2] = 0x1B;
+			}
+			break;
+		case m6:
+			if(flag) {
+					rows[1] = 0x1B;
+			
+			
+			}
+			else {
+                      	        	rows[2] = 0xFF;
+                                	rows[1] = 0x1B;
+                        }
+
+			flag = 0x01;
+			break;
 		default:
 			break;
 	
