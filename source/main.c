@@ -89,15 +89,24 @@ int ballTick(int state) {
 
 	switch(state) {
 		case begin:
-			PORTB = 0x01;
+			PORTB = 0x00;
 			break;
 		case m1:
-			PORTB = 0x00;
+			PORTB = 0x01;
 			
 			if(flag) {
-
-				rows[5] = 0xFF;
-				rows[6] = 0x1B;
+				if(diaL && !diaR ) {
+					rows[5] = 0xFF;
+					rows[6] = 0x17;
+				}
+				else if(diaR && !diaL) {
+					rows[5] = 0xFF;
+					rows[6] = 0x1E;
+				}
+				else {
+					rows[5] = 0xFF;
+					rows[6] = 0x1B;
+				}
 
 			}
 			else {
@@ -109,9 +118,19 @@ int ballTick(int state) {
 
 		case m2:
 			if(flag) {
-
-				rows[4] = 0xFF;
-				rows[5] = 0x1B;
+				if(diaL && !diaR) {
+					rows[4] = 0xFF;
+					rows[5] = 0x17;
+				}
+				else if(diaR && !diaL) {
+					rows[4] = 0xFF;
+					rows[5] = 0x1E;
+				
+				}
+				else {
+					rows[4] = 0xFF;
+					rows[5] = 0x1B;
+				}
 
 			}
 			else {
@@ -122,9 +141,20 @@ int ballTick(int state) {
 			break;
 		case m3:
 			if(flag) {
-
-				rows[3] = 0xFF;
-				rows[4] = 0x1B;
+				if(diaL && !diaR) {
+					rows[3] = 0xFF;
+					rows[4] = 0x17;
+					
+				}
+				else if(diaR && !diaL) {
+					rows[3] = 0xFF;
+					rows[4] = 0x1E;
+				
+				}
+				else {
+					rows[3] = 0xFF;
+					rows[4] = 0x1B;
+				}
 
 			}
 			else {
@@ -134,9 +164,19 @@ int ballTick(int state) {
 			break;
 		case m4:
 			if(flag) {
-
-				rows[2] = 0xFF;
-				rows[3] = 0x1B;
+				if(diaL && !diaR) {
+					rows[2] = 0xFF;
+					rows[3] = 0x17;
+				}
+				else if(diaR && !diaL) {
+					rows[2] = 0xFF;
+					rows[3] = 0x1E;
+				
+				}
+				else {
+					rows[2] = 0xFF;
+					rows[3] = 0x1B;
+				}
 			}
 			else {
 				rows[4] = 0xFF;
@@ -145,24 +185,47 @@ int ballTick(int state) {
 			break;
 		case m5:
 			if(flag) {
+				if(diaL && !diaR) {
+					rows[1] = 0xFF;
+					rows[2] = 0x17;
+				}
+				else if(diaR && !diaL) {
+					rows[1] = 0xFF;
+					rows[2] = 0x1E;		
+				}
+				else {
 					rows[2] = 0x1B;
 					rows[1] = 0xFF;
+				}
 			}
+
 			else {
 				rows[3] = 0xFF;
                                 rows[2] = 0x1B;
 			}
 			break;
 		case m6:
-			if(flag) {
+				if(rows[0] == 0x11) {
 					rows[1] = 0x1B;
+					rows[2] = 0xFF;
+				}
+				else if(rows[0] == 0x03) {
+					rows[1] = 0x1B;
+					rows[2] = 0xFF;
+					rows[1] = 0xFF;
+					rows[1] = 0x17;
+					diaL = 0x01;
+				}
+				else {
+					rows[1] = 0x1B;
+					rows[2] = 0xFF;
+					rows[1] = 0xFF;
+					rows[1] = 0x1E;
+					diaR = 0x01;
+				
+				}
+
 			
-			
-			}
-			else {
-                      	        	rows[2] = 0xFF;
-                                	rows[1] = 0x1B;
-                        }
 
 			flag = 0x01;
 			break;
